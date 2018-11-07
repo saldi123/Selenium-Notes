@@ -1,0 +1,688 @@
+---UNTUK TEXT FIELD
+		  	    WebElement custName = driver.findElement(By.name("custName"));
+		  	    Cell cellcustName = sheet.getCell(1,n);
+		  	    if(cellcustName.getContents() != null && !cellcustName.getContents().equals("")){
+		  	    	System.out.println("custName : "+cellcustName.getContents());
+		  	    	custName.sendKeys(Keys.HOME,Keys.chord(Keys.SHIFT,Keys.END),cellcustName.getContents());
+		  	    }
+
+
+--UNTUK DROP DOWN
+		  	    Select from = new Select(driver.findElement(By.name("from")));
+		  	    Cell cellfrom = sheet.getCell(2,n);
+		  	    if(cellfrom.getContents() != null && !cellfrom.getContents().equals("")){
+		  	    	System.out.println("from : "+cellfrom.getContents());
+		  	    	from.selectByVisibleText(cellfrom.getContents());
+		  	    }
+
+--UNTUK TEXT AREA
+		  	    WebElement note = driver.findElement(By.name("note"));
+		  	    Cell cellnote = sheet.getCell(11,n);
+		  	    if(cellnote.getContents() != null && !cellnote.getContents().equals("")){
+		  	    	System.out.println("note : "+cellnote.getContents());
+					note.clear();
+		  	    	note.sendKeys(Keys.HOME,Keys.chord(Keys.SHIFT,Keys.END),cellnote.getContents());
+		  	    }
+
+-- UNTUK CHECK BOX
+		  	    WebElement employee = driver.findElement(By.name("employee"));
+		  	    Cell cellemployee = sheet.getCell(10,n);
+		  	    if(cellemployee.getContents() != null && !cellemployee.getContents().equals("")){
+			  	    System.out.println("employee : "+cellemployee.getContents());
+		  	    	if(cellemployee.getContents().equalsIgnoreCase("Y")){
+			  	    	if (!employee.isSelected()){
+			  	    		employee.click();
+						}
+			  	    }
+			  	    else{
+			  	    	if (employee.isSelected()){
+			  	    		employee.click();	
+						}
+		  	    	}
+		  	    }
+
+--UNTUK RADIO BUTTON
+	  	    	List<WebElement> statusV2 = driver.findElements(By.name("status"));
+	  	    	Cell cellstatusV2 = sheet2.getCell(3,n);
+	  	    	System.out.println("statusV2 : "+cellstatusV2.getContents());
+	  	    	int istatusSize = statusV2.size();
+	  	    	for(int a=0; a < istatusSize ; a++ ){
+	  	    		String sValue = statusV2.get(a).getAttribute("value");
+	  	    		if (sValue.equalsIgnoreCase(cellstatusV2.getContents())){
+	  	    			statusV2.get(a).click();
+	  	    			if(sValue.equalsIgnoreCase("BARU")){
+	  	    				bStatusNew = true;
+	  	    			}
+	  	    			break;
+	  	    		}
+	  	    	}
+
+--UNTUK DATE 
+ 			  	    Cell cellBPKBDate = sheet2.getCell(10,n);
+  			  	    if(cellBPKBDate.getContents() != null && !cellBPKBDate.getContents().equals("")){
+  			  	    	bFlagDate = false;
+  			  	    	String sYearBPKB = "";
+  			  	    	String sMonthBPKB = "";
+  			  	    	String sDateBPKB = "";
+  			  	    	String cellYearBPKB = cellBPKBDate.getContents().substring(6,10);
+  			  	    	String cellMonthBPKB = cellBPKBDate.getContents().substring(3,5);
+  			  	    	String cellDateBPKB = cellBPKBDate.getContents().substring(0,2);
+  			  	    	System.out.println("BPKB Date :"+cellDateBPKB+"/"+cellMonthBPKB+"/"+cellYearBPKB);
+  			  	      
+  			  	    	driver.findElement(By.xpath("//img[@id='bpkb']")).click();
+  			  	    	//isi tahun
+  			  	    	driver.findElement(By.id("calendar_year_txt")).click();
+  			  	    	
+  			  	    	//dapetin tahun yang ditengah2
+  			  	    	String sYearCurrent = driver.findElement(By.xpath("//div[6]/div[6]")).getText();
+  			  	    	System.out.println("Tahun diTengah : "+sYearCurrent+" dan tahun yg dicari : "+cellYearBPKB);
+  			  	    	//JIKA TAHUN SEKARANG LEBIH KECIL DARI YANG SEHARUSNYA MAKA CARINYA KE ATAS
+  			  	    	if(Integer.parseInt(sYearCurrent) < Integer.parseInt(cellYearBPKB)){
+  			  	    		System.out.println("Tahun tengah lebih kecil dari yang seharusnya");
+  				  	    	for(int a=2; a<=12; a++){
+  				  	    		if(a == 12){
+  				  	    			driver.findElement(By.xpath("//div[6]/div["+a+"]")).click();
+  				  	    			a = a - 4;	  				
+  				  	    		}
+  				  	    		else{
+  				  	    			sYearBPKB = driver.findElement(By.xpath("//div[6]/div["+a+"]")).getText();
+  				  	    			//System.out.println("sYearBPKB: " +sYearBPKB);
+  				  	    			if(sYearBPKB.equals(cellYearBPKB)){
+  				  	    				driver.findElement(By.xpath("//div[6]/div["+a+"]")).click();
+  				  	    				break;
+  				  	    			}
+  				  	    		}
+  					  			
+  					  		}
+  			  	    	}
+  			  	    	//TAHUN SEKARANG LEBIH BESAR DARI YANG SEHARUSNYA
+  			  	    	else{
+  			  	    		System.out.println("Tahun tengah lebih besar dari yang seharusnya");
+  				  	    	for(int a=11; a>=1; a--){
+  				  	    		if(a == 1){
+  				  	    			driver.findElement(By.xpath("//div[6]/div["+a+"]")).click();
+  				  	    			a = a + 4;	  				
+  				  	    		}
+  				  	    		else{
+  				  	    			sYearBPKB = driver.findElement(By.xpath("//div[6]/div["+a+"]")).getText();
+  				  	    			//System.out.println("sYearBPKB: " +sYearBPKB);
+  				  	    			if(sYearBPKB.equals(cellYearBPKB)){
+  				  	    				driver.findElement(By.xpath("//div[6]/div["+a+"]")).click();
+  				  	    				break;
+  				  	    			}
+  				  	    		}
+  					  			
+  					  		}
+  			  	    	}
+
+  			  	    	//isi bulan div_0 itu january dan div_11 itu december
+  			  	    	sMonthBPKB = MonthSelect(cellMonthBPKB);
+  			  	    	driver.findElement(By.id("monthSelect")).click();
+  			  	    	driver.findElement(By.id(sMonthBPKB)).click();
+  				  		
+  			  	    	//isi tanggal
+  			  	    	cellDateBPKB = DateSelect(cellDateBPKB);
+  			  	    	for(int a=2; a<=7; a++){
+  			  	    		for(int b=1; b<=7; b++){
+  			  	    			sDateBPKB = driver.findElement(By.xpath("//div[7]/table/tbody/tr["+a+"]/td["+b+"]")).getText();
+  			  	    			//System.out.println("sDateBPKB: " +sDateBPKB);
+  			  	    			if(sDateBPKB.equals(cellDateBPKB)){
+  			  	    				driver.findElement(By.xpath("//div[7]/table/tbody/tr["+a+"]/td["+b+"]")).click();
+  			  	    				bFlagDate = true;
+  			  	    				break;
+  			  	    			}
+  			  	    		}
+  			  	    		if(bFlagDate){break;}
+  			  	    	}
+  			  	    	String sBPKBDate = driver.findElement(By.name("bpkbDate")).getAttribute("value");
+  			  	    	System.out.println("BPKB Date V2: " +sBPKBDate);
+  			  	    }	  	    			
+  	    		}
+
+--FUNGSI LAINNYA YG HARUS DIMASUKKAN JIKA PAKAI TANGGAL
+	public static String MonthSelect(String Month){
+		String rtn = "";
+		switch (Month){
+			case "01": rtn = "monthDiv_0"; break;
+			case "02": rtn = "monthDiv_1"; break;
+			case "03": rtn = "monthDiv_2"; break;
+			case "04": rtn = "monthDiv_3"; break;
+			case "05": rtn = "monthDiv_4"; break;
+			case "06": rtn = "monthDiv_5"; break;
+			case "07": rtn = "monthDiv_6"; break;
+			case "08": rtn = "monthDiv_7"; break;
+			case "09": rtn = "monthDiv_8"; break;
+			case "10": rtn = "monthDiv_9"; break;
+			case "11": rtn = "monthDiv_10"; break;
+			case "12": rtn = "monthDiv_11"; break;
+		}
+		return rtn;
+	}
+	  
+	public static String DateSelect(String Date){
+		String rtn = "";
+		switch (Date){
+			case "01": rtn = "1"; break;
+			case "02": rtn = "2"; break;
+			case "03": rtn = "3"; break;
+			case "04": rtn = "4"; break;
+			case "05": rtn = "5"; break;
+			case "06": rtn = "6"; break;
+			case "07": rtn = "7"; break;
+			case "08": rtn = "8"; break;
+			case "09": rtn = "9"; break;
+			default: rtn = Date;
+		}
+		return rtn;
+	}
+
+--UNTUK UPLOAD FILE
+	            WebElement logo = driver.findElement(By.name("logo"));
+	            Cell celllogo = sheet.getCell(19,n);
+	            if(celllogo.getContents() != null && !celllogo.getContents().equals("")){
+	            	 System.out.println("Image : "+celllogo.getContents());
+	            	 logo.sendKeys(celllogo.getContents());
+	            }
+
+--UNTUK DROP DOWN MULTIPLE SELECT
+	            Select roleId = new Select(driver.findElement(By.name("roleId")));
+	            Cell cellroleId = sheet.getCell(3,n);
+	            if(cellroleId.getContents() != null && !cellroleId.getContents().equals("")){
+	            	String [] splitKal = cellroleId.getContents().split(";");
+	            	for(int i=0; i<splitKal.length; i++){
+	            		System.out.println("roleId ke-"+(i+1)+" yaitu "+splitKal[i]);
+	            		roleId.selectByVisibleText(splitKal[i]);
+	            	}
+	            }
+
+--UNTUK EDIT DROP DOWN MULTIPLE SELECT JADI HRUS DI DESELECT ALL DLU
+	            Select roleId = new Select(driver.findElement(By.name("roleId")));
+	            Cell cellroleId = sheet.getCell(7,n);
+	            if(cellroleId.getContents() != null && !cellroleId.getContents().equals("")){
+	            	//DESELECT ALL
+	            	roleId.deselectAll();
+	            	
+	            	//SELECT ULANG
+	                String [] splitKal = cellroleId.getContents().split(";");
+	                for(int i=0; i<splitKal.length; i++){
+	                	System.out.println("roleId ke-"+(i+1)+" yaitu "+splitKal[i]);
+	                	roleId.selectByVisibleText(splitKal[i]);
+	                }
+	            } 
+
+
+--UNTUK PERGI KE LINK TERTENTU
+	  	    	//GO TO APPLICATION ONLINE LINK
+	  	    	driver.navigate().to("https://sit.simasfinance.co.id/applicationOnline/list.do");
+
+--UNTUK WAITING HALAMANNYA AGAR BACK END KE FULL LOADED
+		  	    //WAITING PAGE FULLY LOADED
+		  	    wait.until(new ExpectedCondition<Boolean>() {
+		  	    	public Boolean apply(WebDriver driver) {
+		  	    		 return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+		  	    	}
+		  	    });
+
+--INISIALISASI STORE WINDOW PERTAMA KALI
+		  	    //Store Window Handle dlu untuk mengantisipasi Pop Up
+		  	    String parentWindowHandler = driver.getWindowHandle(); // Store your parent window
+		  	    String subWindowHandler = null;
+		    	Boolean bFlagDate = false;
+		  	    System.out.println("Finish Store Window Handle");
+		  	    
+	  	    	//INISIALISASI HANDLES NYA
+		  	    Set<String> handles = driver.getWindowHandles(); // get all window handles
+		  	    Iterator<String> iterator = handles.iterator();
+
+--UNTUK WAITING JIKA SUDAH SAMPAI KESUATU HALAMAN TERTENTU
+		  		//WAITING SAMPE SAMPAI KE HALAMANNYA
+		  	    wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("fromCreateOn")));
+		  	    wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@value='Search']")));
+
+--MENGATASI ALERT POP UP JAVA SCRIPT (YES / NO)
+			  	    //buat handle pop up nya.
+			        wait.until(ExpectedConditions.alertIsPresent());Sheet9
+			        Alert alert = driver.switchTo().alert();
+			        System.out.println("message : "+alert.getText());
+			        alert.accept(); 
+
+--UNTUK SLEEP
+  			  	    //SLEEP FOR BACKGROUND PROCESS RUNNING
+		  	    	Thread.sleep(1000);
+
+--UNTUK MENUNGGU SEBELUM PINDAH ROW
+	  	    	/*******THE END SECTION**********/
+		  	    //Waiting Background Proses dlu
+		  	    if(n+1 != nRow){
+		  	    	System.out.println("sleep before redirecting new row..");
+		  	    	Thread.sleep(2000);
+		  	    }
+		  	    System.out.println("Redirecting..");
+
+--WAITING UNTUK HALAMANNYA SUDAH SAMPAI HOME DILIHAT MELALUI URL
+		        //WAITING KALAU DY UDAH SAMPE HOME
+		  	    wait.until(new ExpectedCondition<Boolean>() {
+		  	    	public Boolean apply(WebDriver driver) {
+		  	    		return driver.getCurrentUrl().contains("home.do");
+		  	    	}
+		  	    });
+
+--UNTUK SUBMIT
+		  	    //SUBMIT
+		  	    driver.findElement(By.xpath("//input[@name='withoutScoring']")).click();
+
+--UNTUK MENGATASI HALAMAN POP UP
+	  	    	//KLIK SCORING BUTTON
+	  	    	driver.findElement(By.xpath("//input[@name='scoring']")).click();
+
+	  	    	//waiting sampe pop up nya kelar
+		  	    wait.until(new ExpectedCondition<Boolean>() {
+		  	    	public Boolean apply(WebDriver driver) {
+		  	    		return (driver.getWindowHandles().size() != 1);
+		  	    	}
+		  	    });
+
+	  	    	//switch to pop up
+		  	    handles = driver.getWindowHandles(); // get all window handles
+		  	    iterator = handles.iterator();
+		  	    while (iterator.hasNext()){
+		  	    	System.out.println("iterator : "+iterator.next());
+		  	    	subWindowHandler = iterator.next();
+		  	    }
+		  	    
+		  	    driver.switchTo().window(subWindowHandler); // switch to popup window
+		  	    wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@value='Submit']")));
+		  	    
+		  	    //WAITING PAGE FULLY LOADED
+		  	    wait.until(new ExpectedCondition<Boolean>() {
+		  	    	public Boolean apply(WebDriver driver) {
+		  	    		 return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+		  	    	}
+		  	    });
+
+  	    		//Masa Pajak STNK
+		  	    //Select Question8 = new Select(driver.findElement(By.xpath("//tr[9]/td[4]/select")));
+  	    		Select Question8 = new Select(driver.findElement(By.id("8")));
+  	    		Cell cellQuestion8= sheet4.getCell(13,n);
+  	    		if(cellQuestion8.getContents() != null && !cellQuestion8.getContents().equals("")){
+  	    			System.out.println("Masa Pajak STNK : "+cellQuestion8.getContents());
+  	    			Question8.selectByVisibleText(cellQuestion8.getContents());
+  	    		}
+  	    		
+  	    		//SLEEP FOR BACKGROUND PROCESS RUNNING
+	  	    	Thread.sleep(1000);
+  	    		
+	  	    	//SUBMIT
+  	    		driver.findElement(By.xpath("//input[@value='Submit']")).click();
+
+	  	    		
+  	    		//Waiting ke halaman lain
+  	    		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@name='close']")));
+  	    		
+  	    		//CLOSE
+  	    		driver.findElement(By.xpath("//input[@name='close']")).click();
+	  	    		
+		  	    //buat handle pop up nya.
+		        wait.until(ExpectedConditions.alertIsPresent());
+		        Alert alert = driver.switchTo().alert();
+		        System.out.println("message : "+alert.getText());
+		        alert.accept();
+	  	    		
+	  	    		
+		  	    //waiting dlu sampe pop upnya ke closed
+		  	    wait.until(new ExpectedCondition<Boolean>() {
+		  	    	public Boolean apply(WebDriver driver) {
+		  	    		return (driver.getWindowHandles().size() == 1);
+		  	    	}
+		  	    });
+		  	    
+		  	    //balikin parent windownya 
+		  	    driver.switchTo().window(parentWindowHandler);
+
+	  	    	/********************BI CHECKING************************/
+	  	    	System.out.println("/************************BI CHECKING********************/");
+	  	    	
+		  	    //WAITING BUTTON
+		  	    wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@value='Submit']")));
+	  	    	
+		  	    //WAITING PAGE FULLY LOADED
+		  	    wait.until(new ExpectedCondition<Boolean>() {
+		  	    	public Boolean apply(WebDriver driver) {
+		  	    		 return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+		  	    	}
+		  	    });
+
+--UNTUK KONDISI IS VISIBLE, JIKA VISIBLE AKAN MELAKUKAN ACTION
+				if(isVisible(driver, "xpath", "//input[@name='pick']") == true){
+					//KODING DISINI
+				}
+
+				public static boolean isVisible(WebDriver driver, String type, String elementID)
+				{ 
+					try 
+					{ 
+						WebDriverWait wait = new WebDriverWait(driver, 1);
+						if (type.equalsIgnoreCase("Name")){
+							wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(""+elementID+"")));
+						}
+						else if (type.equalsIgnoreCase("xpath")){
+							wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(""+elementID+"")));
+						}
+						return true; 
+
+					}   // try 
+					catch (Exception Ex) 
+					{ 
+						return false; 
+					}   // catch 
+				} 
+
+--MENDAPATKAN NILAI DARI DROP DOWN YANG DI PILIH
+		  	    //GET SALES TYPE
+		  	    Select salesTypeId = new Select(driver.findElement(By.name("salesTypeId")));
+		  	    String sSalesType = salesTypeId.getFirstSelectedOption().getText();
+		  	    System.out.println("sSalesType : "+sSalesType);
+
+--JIKA ICON DI DISPLAYED
+		  	    if(driver.findElement(By.name("bankAccountAgencyFeeId")).isDisplayed()){
+					//KODING DISINI
+				}
+				
+--JIKA DROPDOWN DISABLED
+				if(branchIdV2.getAttribute("disabled") == null){
+					//ini jika dy enabled
+				}
+				
+--FUNGSI UNTUK SUBSTRING
+			  	    //DAPETIN JUMLAH TENOR pada saat putaran pertama
+					//datanya contonya 5/12 < disuruh pecah 5 dan 12
+		  	    	if(bFlagTenor == false){
+		  	    		bFlagTenor = true;
+			  	    	String sTenor = driver.findElement(By.xpath("//tr[2]/td[7]")).getText();
+			  	    	System.out.println("Counter / Tenor : "+sTenor);
+			  	    	
+			  	    	nCounter = Integer.parseInt(sTenor.substring(0,sTenor.indexOf("/")-1));
+			  	    	System.out.println("Counter : "+nCounter);
+			  	    	
+			  	    	nCount = nCounter;
+			  	    	
+			  	    	nTenor = Integer.parseInt(sTenor.substring(sTenor.indexOf("/")+2, sTenor.length()));
+			  	    	System.out.println("Tenor : "+nTenor);	
+			  	    	
+			  	    	sProduct = driver.findElement(By.xpath("//tr[2]/td[6]")).getText();
+			  	    	System.out.println("Product : "+sProduct);	
+		  	    	}
+					
+--FUNGSI JIKA ALERT MUNCUL
+		  	    	if(isAlertPresent(driver) == true){
+					//BERARTI ALERT MUNCUL
+					}
+					
+					public static boolean isAlertPresent(WebDriver driver)
+				{ 
+					try 
+					{ 
+						WebDriverWait wait = new WebDriverWait(driver, 1);
+						wait.until(ExpectedConditions.alertIsPresent());
+						return true; 
+					}   // try 
+					catch (Exception Ex) 
+					{ 
+						return false; 
+					}   // catch 
+				}   // isAlertPresent()
+					
+--UNTUK CLICK WAITING LINK YANG CONTAINS
+	  	    	//WAITING SAMPAI KETEMU LINKNYA 
+	  	    	wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(@href, 'bankAccount/form.do?bankAccountId="+cellBankAcctID.getContents()+"')]")));
+		  	    
+		  	    //WAITING PAGE FULLY LOADED
+		  	    wait.until(new ExpectedCondition<Boolean>() {
+		  	    	public Boolean apply(WebDriver driver) {
+		  	    		 return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+		  	    	}
+		  	    });
+		  	    
+		  	    //CLICK ICON EDIT
+	  	    	driver.findElement(By.xpath("//a[contains(@href, 'bankAccount/form.do?bankAccountId="+cellBankAcctID.getContents()+"')]")).click();
+		  	    
+--UNTUK WAITING SUPAYA LEBIH DARI 0 PANJANGNYA
+		  	    //WAITING LENGTH SUPAYA LEBIH DARI 0
+		  	    wait.until(new ExpectedCondition<Boolean>() {
+		  	    	public Boolean apply(WebDriver driver) {
+		  	    		return driver.findElement(By.name("letterPostalCode")).getAttribute("value").length() != 0;
+		  	    	}
+		  	    });
+
+--UNTUK WAITING DROP DOWN SUPAYA ISINYA LEBIH DARI 1
+					  	    wait.until(new ExpectedCondition<Boolean>() {
+				  	    	public Boolean apply(WebDriver driver) {
+				  	    		Select count = new Select(driver.findElement(By.id("letterKelurahanId")));
+				  	    		return count.getOptions().size() > 1;
+				  	    	}
+				  	    });
+
+atau bisa ini
+	  	    	wait.until(new ExpectedCondition<Boolean>() {
+	  	    		public Boolean apply(WebDriver driver) {
+	  	    			Select vehicleCollateralReferenceId = new Select(driver.findElement(By.name("vehicleCollateralReferenceId")));
+	  	    			//return vehicleCollateralReferenceId.getOptions().size() > 1;
+	  	    			int CountVeColRefID = vehicleCollateralReferenceId.getOptions().size();
+	  	    			if (CountVeColRefID > 1){
+	  	    				//CountVeColRefID.selectByIndex(random.nextInt(count-1)+1);
+	  	    				return true;
+	  	    			}
+	  	    			else
+	  	    				return false;
+	  	    		}
+	  	    	});
+
+FOR LOOP--------------------REFLIST USING ONCLICK
+List<WebElement> refList = driver.findElements(By.xpath("//a[contains(@onclick,"+cellCFApplID.getContents()+")]"));
+                      for(WebElement id : refList) {
+                          System.out.println("Test : "+id.getAttribute("onclick"));
+if(id.getAttribute("onclick").contains("approval.do")){
+                              System.out.println("berhasil click");
+                              id.click();
+
+                              //waiting sampai proses selesai
+                                wait.until(new ExpectedCondition<Boolean>() {
+                                    public Boolean apply(WebDriver driver) {
+                                        return driver.getCurrentUrl().contains("count=");
+                                    }
+                                });
+
+                              //WAITING PAGE FULLY LOADED
+                              wait.until(new ExpectedCondition<Boolean>() {
+                                  public Boolean apply(WebDriver driver) {
+                                       return ((JavascriptExecutor)driver).executeScript("return document.readyState").equals("complete");
+                                  }
+                              });
+
+                              System.out.println("Approve Berhasil");
+                              nFlag = true;
+                          }
+
+                          if(nFlag == true){
+                              break;
+                          } 
+
+
+--UNTUK MENGAMBIL KATA DARI KALIMAT TERTENTU
+CONTOH ADA KALIMAT : checkPersonal('KIOSON','41','saldi Online tiga','109381238194008','0812291823212');
+yang ingin di ambil hanyalah angka 41
+			  	    	String sKata = id.getAttribute("onclick").substring(id.getAttribute("onclick").indexOf("'")+1,id.getAttribute("onclick").length());
+		  	    		System.out.println("sKata : "+sKata);
+		  	    		String sKata2 = sKata.substring(sKata.indexOf("'")+3,sKata.length());
+		  	    		System.out.println("sKata2 : "+sKata2);
+		  	    		String sKataFinal = sKata2.substring(0, sKata2.indexOf("'"));
+		  	    		System.out.println("sKataFinal : "+sKataFinal);
+
+sKata : KIOSON','41','saldi Online tiga','109381238194008','0812291823212');
+sKata2 : 41','saldi Online tiga','109381238194008','0812291823212');
+sKataFinal : 41
+	
+--UNTUK PAKE ROBOT KETIK SENDIRI
+				  	    //UNTUK SAVE DIALOG BOX, PAKE JAVA ROBOT
+				  	    Robot robot = new Robot();
+				  	    Thread.sleep(1500); // tunggu sampai button save nya muncul
+				  	    robot.keyPress(KeyEvent.VK_ENTER);
+				  	    robot.keyRelease(KeyEvent.VK_ENTER);
+
+						--pake library ini
+						import java.awt.AWTException;
+						import java.awt.Robot;
+						import java.awt.event.KeyEvent;
+	
+--CONVERT DARI INTEGER KE FORMAT CURRENCY
+						import java.text.DecimalFormat;
+
+						//INISIALISASI FORMAT CURRENCY
+						DecimalFormat curr = new DecimalFormat("#,##0");
+
+						String sCreditTemp = curr.format(nTotal);
+
+						Sebelum  nTotal = 2000000;
+						Sesudah Convert = 2,000,000;
+
+--UNTUK MENGHAPUS SPACE DI AWAL / AKHIR KALIMAT
+						 sRefundAdmin = sRefundAdmin.trim();
+		  	   			 System.out.println("sRefundAdmin : "+sRefundAdmin);
+
+--CARI TAHUN SYSDATE
+		  	    Calendar cal = Calendar.getInstance();
+		  	    int year_cal = cal.get(Calendar.YEAR);
+		  	    System.out.println("year_cal : "+year_cal);
+
+
+--UNTUK MEMOTONG DECIMAL DARI DOUBLE
+CONTOH : 
+double dTotal = 12.356622;
+String.format("%3f",dTotal); //HASILNYA 12.357 sudah di bulatkan
+ATAU bisa pake ini
+DecimalFormat df = new DecimalFormat("#.###");
+df.format(dTotal); // HASILNYA 12.357 sudah di bulatkan
+
+double dTotal = 12.000;
+jika pake String.format("%3f",dTotal); // maka hasilnya 12.000
+Jika pake df.format(dTotal); //maka hasilnya 12
+
+-- ISENG LOGIC BUAT SEGITIGA / BINTANG
+  	    /***************************SEGITIGA**************************************************************/
+  	     System.out.println("============================================================");
+  	     int nBaris = 5;
+  	     int nTemp = 0;
+  	     
+  	     /******SEGITIGA SAMA KAKI*******/
+  	     //BARIS 
+  	     for(int y=1; y<=nBaris; y++){
+  	    	 nTemp = 1;
+  	    	 //BUAT KOLOM
+  	    	 for(int x=1; x<=((nBaris*2)-1); x++){
+  	    		 if(x >= ((nBaris-y)+1)&& nTemp <= ((y*2)-1)){
+  	    			 nTemp += 1;
+  	    			 System.out.print("*");
+  	    		 }
+  	    		 else{
+  	    			System.out.print(" ");
+  	    		 }
+  	    		 
+  	    	 }
+  	    	 System.out.println("");
+  	     }
+  	     
+  	     /*********SEGITIGA TERBALIK******/
+  	     //BARIS
+  	     for(int y=1; y<=nBaris; y++){
+  	    	 nTemp = 0;
+  	    	 //KOLOM
+  	    	 for(int x=1; x<=((nBaris*2)-1); x++ ){
+  	    		 if( x >= y && nTemp < ((nBaris-y)*2)+1){
+  	    			 nTemp += 1;
+  	    			 System.out.print("*");
+  	    		 }
+  	    		 else{
+  	    			 System.out.print(" ");
+  	    		 }
+  	    	 }
+  	    	 System.out.println("");
+  	     }
+  	     
+  	    System.out.println("============================================================");
+  	    /**************************************************************************************************/
+
+-- ISENG LOGIC SORTING ANGKA
+		/**********************SORTING***************************/
+		System.out.println("============================================================");
+		String sAngka = "5;2;1;3;8;4;25;20;54;10;7;11";
+    	String [] splitAngka = sAngka.split(";");
+    	String sTemp = "";
+    	int nLength = splitAngka.length;
+    	System.out.println("nLength : "+nLength);
+    	for(int i=0; i<nLength; i++){
+    		for(int n=i+1; n<nLength; n++){
+    			if(Integer.parseInt(splitAngka[i]) > Integer.parseInt(splitAngka[n])){
+    				sTemp = splitAngka[i];
+    				splitAngka[i] = splitAngka[n];
+    				splitAngka[n] = sTemp;
+    			}
+    		}
+    		System.out.println("Angka ke-"+(i+1)+" yaitu "+splitAngka[i]);
+    	}
+		System.out.println("============================================================");
+
+--ISENG LOGIC FIBBONACI
+		/**********************FIBONACCI***************************/
+		System.out.println("============================================================");
+		int nAngka = 30;
+		int n1 = 1;
+		int n2 = 0;
+		int nTemp = 0;
+		for(int n=1; n<=nAngka; n++){
+			if(n==1){
+				System.out.println("Angka ke-"+n+" : "+n1);
+			}
+			else{
+				nTemp = n1;
+				n1 = n1+n2;
+				n2 = nTemp;
+				System.out.println("Angka ke-"+n+" : "+n1);
+			}
+			
+		}
+		//1,1,2,3,5,8,13,21
+		System.out.println("============================================================");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				// locate and click the icon to access the page to edit the
+				// information
+				Cell cellPersonalIdAddress = sheetEdittedAlamatSesuaiKTP.getCell(1, rowIndicator);
+				/*
+				 * driver.findElement(By.xpath(
+				 * "//a[contains(@onclick, '/personal/edit.do?personalId=" +
+				 * cellPersonalIdAddress.getContents() + "')]")) .click();
+				 */
+				/*
+				 * driver.findElement(By.xpath(
+				 * "//a[contains(@onclick, 'EDIT')]")) .click();
+				 */
+
+				// onclick="return ubahPersonal('24','EDIT');"
+
+				// driver.findElement(By.xpath("//a[@onclick='return
+				// ubahPersonal('24','EDIT')']")).click();
+
+				// driver.findElement(By.xpath("//img[@title='Edit']")).click();
